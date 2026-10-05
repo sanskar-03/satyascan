@@ -107,7 +107,7 @@ def fact_check_retriever_node(state):
                         r["claim_id"] = c.get("claim_id")
                         trusted.append(r)
             except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True)
+                logger.error(f"An error occurred: {e}", exc_info=True)
     else:
         query = state["article"][:200]
         try:

@@ -283,7 +283,7 @@ def search_news_for_claims(claims, max_total_results=30):
                     if res_list:
                         raw_hits.extend(res_list)
                 except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True)
+                    logger.error(f"An error occurred: {e}", exc_info=True)
             
             # Cache the deep hit list
             if len(raw_hits) >= 8:
@@ -305,7 +305,7 @@ def search_news_for_claims(claims, max_total_results=30):
                 if res is not None and res.get("snippet"):
                     final_results.append(res)
             except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True)
+                logger.error(f"An error occurred: {e}", exc_info=True)
                     
     return final_results
 
