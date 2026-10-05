@@ -1512,6 +1512,10 @@
   /* ==========================================================================
      RESPONSIVE BREAKPOINTS (MOBILE, TABLET, DESKTOP)
      ========================================================================== */
+  @media (max-width: 1050px) {
+    .nav-links { display: none; } /* Hide text links on tablets to prevent overlapping */
+    .brand-name { font-size: 18px; }
+  }
   @media (max-width: 992px) {
     .verdict-body-grid { grid-template-columns: 1fr; gap: 24px; }
     .stats-banner { grid-template-columns: repeat(2, 1fr); }
