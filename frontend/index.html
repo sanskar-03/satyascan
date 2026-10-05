@@ -1611,6 +1611,88 @@
   .skiptranslate iframe { display: none !important; } 
   #goog-gt-tt { display: none !important; }
 
+
+  /* --- PREMIUM ANIMATION OVERHAUL --- */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Hero Text & Search Box Glide In */
+  @keyframes glideUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes scalePop {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  @keyframes borderGlow {
+    0%, 100% { box-shadow: 0 0 15px var(--diamond-blue-soft); border-color: var(--border-subtle); }
+    50% { box-shadow: 0 0 25px var(--diamond-blue-glow); border-color: var(--diamond-blue); }
+  }
+
+  .hero-section {
+    animation: glideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .search-box-container {
+    transition: all 0.3s ease;
+  }
+  .search-box-container:focus-within {
+    animation: borderGlow 3s infinite;
+  }
+  
+  .verdict-banner-card {
+    animation: scalePop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .dossier-box {
+    animation: glideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .dossier-box:nth-child(2) { animation-delay: 0.1s; }
+  .dossier-box:nth-child(3) { animation-delay: 0.2s; }
+  .dossier-box:nth-child(4) { animation-delay: 0.3s; }
+  
+  .h-btn {
+    animation: scalePop 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .filter-tabs .h-btn:nth-child(1) { animation-delay: 0.05s; }
+  .filter-tabs .h-btn:nth-child(2) { animation-delay: 0.10s; }
+  .filter-tabs .h-btn:nth-child(3) { animation-delay: 0.15s; }
+  .filter-tabs .h-btn:nth-child(4) { animation-delay: 0.20s; }
+  .filter-tabs .h-btn:nth-child(5) { animation-delay: 0.25s; }
+  
+  /* Smooth Hover Lifts */
+  .dossier-box:hover, .history-card:hover, .nav-link:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* Logo continuous float */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .brand-logo-icon {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  /* Background ambient glow behind hero */
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(circle, var(--diamond-blue-soft) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hero-section { position: relative; z-index: 1; }
+
 </style>
 </head>
 <body>
