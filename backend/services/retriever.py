@@ -1,5 +1,5 @@
 from services.utils.logger import logger
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 import random
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from urllib.parse import urlparse
