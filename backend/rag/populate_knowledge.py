@@ -249,6 +249,35 @@ DOCUMENTS = [
     ("Swallowing Spiders in Sleep Myth",
      "Humans do not unknowingly swallow eight live spiders a year while sleeping. Spiders have no reason to crawl into a human mouth and deliberately avoid large sleeping organisms.",
      "https://www.scientificamerican.com/article/fact-or-fiction-people-swallow-8-spiders-a-year-while-sleeping/", "scientificamerican.com")
+ # --- ADDED: Global Fact-Checking Organizations ---
+    ("Snopes Fact-Checking", "Snopes is the internet's definitive fact-checking resource. It serves as a comprehensive reference for checking the veracity of rumors, urban legends, and misinformation.", "https://www.snopes.com/about/", "snopes.com"),
+    ("PolitiFact Truth-O-Meter", "PolitiFact is a nonpartisan fact-checking website that rates the accuracy of claims by elected officials and others on its Truth-O-Meter.", "https://www.politifact.com/about/", "politifact.com"),
+    ("Full Fact UK", "Full Fact is a team of independent fact checkers and campaigners who find, expose and counter the harm it does.", "https://fullfact.org/about/", "fullfact.org"),
+    ("Poynter IFCN", "The International Fact-Checking Network (IFCN) at Poynter is a unit of the Poynter Institute dedicated to bringing together fact-checkers worldwide.", "https://www.poynter.org/ifcn/", "poynter.org"),
+
+    # --- ADDED: Major Wire Services ---
+    ("Reuters News Wire", "Reuters is the news and media division of Thomson Reuters. It is one of the largest news agencies in the world, committed to independence, integrity, and freedom from bias.", "https://www.reuters.com/about/", "reuters.com"),
+    ("Associated Press (AP)", "The Associated Press is an independent global news organization dedicated to factual reporting. Founded in 1846, AP is the most trusted source of independent news and information.", "https://www.ap.org/about/", "apnews.com"),
+    ("Agence France-Presse (AFP)", "AFP is a leading global news agency providing fast, comprehensive and verified coverage of the events shaping our world.", "https://www.afp.com/en/agency/about", "afp.com"),
+    ("The Guardian", "The Guardian is a British daily newspaper known for independent journalism, investigative reporting, and high editorial standards.", "https://www.theguardian.com/about", "theguardian.com"),
+    ("Al Jazeera", "Al Jazeera is an independent news channel broadcasting globally, providing voices and perspectives from across the world.", "https://network.aljazeera.net/", "aljazeera.com"),
+
+    # --- ADDED: Global Health & World Bodies ---
+    ("World Health Organization (WHO)", "WHO is the United Nations agency that connects nations, partners and people to promote health, keep the world safe and serve the vulnerable.", "https://www.who.int/about", "who.int"),
+    ("CDC", "The Centers for Disease Control and Prevention is the national public health agency of the United States.", "https://www.cdc.gov/about/", "cdc.gov"),
+    ("United Nations", "The United Nations is an international organization founded in 1945. Currently made up of 193 Member States.", "https://www.un.org/en/about-us", "un.org"),
+
+    # --- ADDED: Indian & Regional Fact-Checkers & Press ---
+    ("PIB Fact Check", "Press Information Bureau (PIB) Fact Check India acts as a deterrent to creators and disseminators of fake news and misinformation.", "https://pib.gov.in/factcheck", "pib.gov.in"),
+    ("Alt News", "Alt News is an Indian independent fact-checking website committed to debunking misinformation, fake news, and propaganda.", "https://www.altnews.in/about/", "altnews.in"),
+    ("Boom Live", "BOOM is an independent digital journalism initiative with a focus on fact-checking and busting fake news in India.", "https://www.boomlive.in/about-us", "boomlive.in"),
+    ("The Hindu", "The Hindu is an Indian English-language daily newspaper owned by The Hindu Group, known for its authoritative and independent journalism.", "https://www.thehindu.com/aboutus/", "thehindu.com"),
+    ("The Indian Express", "The Indian Express is an English-language Indian daily newspaper founded in 1932, known for investigative journalism.", "https://indianexpress.com/about/", "indianexpress.com"),
+
+    # --- ADDED: Academic & Scientific Journals ---
+    ("Nature Journal", "Nature is a weekly international journal publishing the finest peer-reviewed research in all fields of science and technology.", "https://www.nature.com/nature/about", "nature.com"),
+    ("Science Magazine", "Science, also widely referred to as Science Magazine, is the peer-reviewed academic journal of the American Association for the Advancement of Science.", "https://www.science.org/about", "science.org"),
+    ("MIT", "The Massachusetts Institute of Technology is a private land-grant research university in Cambridge, Massachusetts.", "https://www.mit.edu/about/", "mit.edu"),
 ]
 
 def populate():
