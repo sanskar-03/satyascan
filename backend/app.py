@@ -6,6 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.verify import router
 from services.utils.logger import logger
 from sentence_transformers import CrossEncoder
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
+
 
 state = {}
 
