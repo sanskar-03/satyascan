@@ -295,10 +295,15 @@
     color: var(--text-primary);
   }
 
+  @keyframes gradientShine {
+    to { background-position: 200% center; }
+  }
   .hero-title span {
-    background: linear-gradient(135deg, var(--diamond-blue) 0%, #38BDF8 60%, #FFFFFF 100%);
+    background: linear-gradient(135deg, var(--diamond-blue) 0%, #38BDF8 30%, #E0F7FA 60%, var(--diamond-blue) 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradientShine 4s linear infinite;
   }
 
   .hero-subtitle {
@@ -1750,6 +1755,49 @@
     .footer-grid { grid-template-columns: 1fr; gap: 32px; }
     .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   }
+
+  /* Interactive Button Sheen */
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg) translate(-100%, 100%);
+    transition: all 0.6s ease;
+  }
+  .btn-primary:hover::after {
+    transform: rotate(45deg) translate(100%, -100%);
+  }
+
+  /* Stats Stagger Animation */
+  .stat-box { animation: glideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .stat-box:nth-child(1) { animation-delay: 0.1s; }
+  .stat-box:nth-child(2) { animation-delay: 0.2s; }
+  .stat-box:nth-child(3) { animation-delay: 0.3s; }
+  .stat-box:nth-child(4) { animation-delay: 0.4s; }
+  
+  /* Number Count Pop */
+  @keyframes countPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .stat-value {
+    display: inline-block;
+    animation: countPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .stat-box:nth-child(1) .stat-value { animation-delay: 0.2s; }
+  .stat-box:nth-child(2) .stat-value { animation-delay: 0.3s; }
+  .stat-box:nth-child(3) .stat-value { animation-delay: 0.4s; }
+  .stat-box:nth-child(4) .stat-value { animation-delay: 0.5s; }
+
 </style>
 </head>
 <body>
