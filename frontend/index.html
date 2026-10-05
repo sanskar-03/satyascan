@@ -1522,7 +1522,17 @@
 
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
-    .nav-links { display: none; } /* Mobile navbar hides desktop links */
+    
+    /* Responsive Nav Actions for Mobile */
+    .nav-links { display: none; } 
+    .nav-actions { gap: 6px; }
+    #systemStatusText, #themeLabel { display: none; }
+    .system-badge { padding: 6px 8px; }
+    .theme-toggle-btn { padding: 6px 8px; }
+    .translate-container { min-width: auto; padding: 0 2px; }
+    .brand-name { font-size: 16px; }
+    .brand-tag { display: none; } /* Hide v1.0.0 on small screens */
+
     .history-grid { grid-template-columns: 1fr; }
     .source-balance-row { grid-template-columns: 1fr; gap: 8px; }
     .hero-cta-group { flex-direction: column; width: 100%; }
