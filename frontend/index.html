@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+<title>SATYASCAN - Autonomous Fact-Checking & Deep Intelligence Platform</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================================================
+     COLOR SYSTEM: DIAMOND BLUE, WHITE, BLACK (DARK & LIGHT THEMES)
+     ========================================================================== */
+  :root[data-theme="dark"] {
+    --bg-main: #07090E;
+    --bg-card: #0E131F;
+    --bg-card-elevated: #151D30;
+    --bg-card-hover: #1A243D;
+    --bg-input: #0A0E17;
+    --bg-badge: rgba(0, 210, 255, 0.08);
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    
+    --diamond-blue: #00D2FF;
+    --diamond-blue-glow: rgba(0, 210, 255, 0.25);
+    --diamond-blue-soft: rgba(0, 210, 255, 0.12);
+    --diamond-blue-dark: #0A84FF;
+    
+    --border-subtle: #1E293B;
+    --border-strong: #2A3B53;
+    --border-diamond: rgba(0, 210, 255, 0.4);
+    
+    --verdict-real: #10B981;
+    --verdict-real-bg: rgba(16, 185, 129, 0.12);
+    --verdict-real-border: #059669;
+    
+    --verdict-fake: #EF4444;
+    --verdict-fake-bg: rgba(239, 68, 68, 0.12);
+    --verdict-fake-border: #DC2626;
+    
+    --verdict-unverified: #F59E0B;
+    --verdict-unverified-bg: rgba(245, 158, 11, 0.12);
+    --verdict-unverified-border: #D97706;
+
+    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 210, 255, 0.04);
+  }
+
+  :root[data-theme="light"] {
+    --bg-main: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-card-elevated: #F1F5F9;
+    --bg-card-hover: #E2E8F0;
+    --bg-input: #FFFFFF;
+    --bg-badge: rgba(2, 132, 199, 0.08);
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    
+    --diamond-blue: #0284C7;
+    --diamond-blue-glow: rgba(2, 132, 199, 0.2);
+    --diamond-blue-soft: rgba(2, 132, 199, 0.1);
+    --diamond-blue-dark: #0369A1;
+    
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --border-diamond: rgba(2, 132, 199, 0.4);
+    
+    --verdict-real: #059669;
+    --verdict-real-bg: rgba(5, 150, 105, 0.1);
+    --verdict-real-border: #047857;
+    
+    --verdict-fake: #DC2626;
+    --verdict-fake-bg: rgba(220, 38, 38, 0.1);
+    --verdict-fake-border: #B91C1C;
+    
+    --verdict-unverified: #D97706;
+    --verdict-unverified-bg: rgba(217, 119, 6, 0.1);
+    --verdict-unverified-border: #B45309;
+
+    --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; width: 100%; }
+
+  /* ==========================================================================
+     TOP NAVIGATION BAR (RESPONSIVE)
+     ========================================================================== */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7, 9, 14, 0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 0;
+    transition: background 0.25s ease;
+  }
+
+  :root[data-theme="light"] .navbar {
+    background: rgba(255, 255, 255, 0.90);
+  }
+
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .brand-logo-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--diamond-blue), #0A84FF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px var(--diamond-blue-glow);
+    color: #07090E;
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .brand-name {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .brand-name span { color: var(--diamond-blue); }
+
+  .brand-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--diamond-blue-soft);
+    color: var(--diamond-blue);
+    border: 1px solid var(--border-diamond);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-link:hover { color: var(--diamond-blue); }
+
+  .nav-count-badge {
+    background: var(--diamond-blue-soft);
+    color: var(--diamond-blue);
+    border: 1px solid var(--border-diamond);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-weight: 700;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .theme-toggle-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle-btn:hover {
+    border-color: var(--diamond-blue);
+    background: var(--bg-card-hover);
+  }
+
+  .system-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--verdict-real);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+    animation: pulseDot 2s infinite ease-in-out;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  /* ==========================================================================
+     HERO & ABOUT SECTION (COMPANY OVERVIEW)
+     ========================================================================== */
+  .hero-section {
+    padding: 60px 0 44px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: var(--diamond-blue-soft);
+    border: 1px solid var(--border-diamond);
+    color: var(--diamond-blue);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px var(--diamond-blue-glow);
+  }
+
+  .hero-title {
+    font-size: clamp(30px, 5.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+    max-width: 860px;
+    margin: 0 auto 16px;
+    color: var(--text-primary);
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--diamond-blue) 0%, #38BDF8 60%, #FFFFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(14.5px, 2vw, 17px);
+    color: var(--text-secondary);
+    max-width: 720px;
+    margin: 0 auto 28px;
+    line-height: 1.65;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--diamond-blue), #0A84FF);
+    color: #07090E;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 13px 28px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px var(--diamond-blue-glow);
+    transition: all 0.2s ease;
+    min-height: 44px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4);
+  }
+
+  .btn-secondary {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 13px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-strong);
+  }
+
+  /* Stats Counter Banner */
+  .stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: var(--shadow-card);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .stat-card { text-align: center; }
+  .stat-number {
+    font-size: clamp(22px, 3.5vw, 28px);
+    font-weight: 800;
+    color: var(--diamond-blue);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat-label {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* ==========================================================================
+     MAIN CLAIMS DESK
+     ========================================================================== */
+  .claims-section {
+    padding: 40px 0 24px;
+  }
+
+  .card-desk {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: clamp(20px, 4vw, 32px);
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-desk::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--diamond-blue), transparent);
+  }
+
+  .desk-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .desk-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .desk-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .case-id-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--diamond-blue);
+    background: var(--diamond-blue-soft);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-diamond);
+  }
+
+  .session-badge-top {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    background: var(--bg-card-elevated);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Presets */
+  .presets-box {
+    margin-bottom: 20px;
+  }
+
+  .presets-header {
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .presets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .preset-btn {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--diamond-blue);
+    color: var(--text-primary);
+    background: var(--bg-card-hover);
+  }
+
+  .pill-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .pill-tag.real { background: var(--verdict-real-bg); color: var(--verdict-real); }
+  .pill-tag.fake { background: var(--verdict-fake-bg); color: var(--verdict-fake); }
+  .pill-tag.unv { background: var(--verdict-unverified-bg); color: var(--verdict-unverified); }
+
+  /* Input */
+  .input-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  textarea.claim-textarea {
+    width: 100%;
+    min-height: 130px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 16px;
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea.claim-textarea:focus {
+    border-color: var(--diamond-blue);
+    box-shadow: 0 0 0 3px var(--diamond-blue-soft);
+  }
+
+  .input-meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .btn-clear {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 11.5px;
+    padding: 4px;
+  }
+
+  .btn-clear:hover { color: var(--text-primary); }
+
+  /* Media Toggle */
+  .media-expander {
+    margin-bottom: 24px;
+  }
+
+  .media-expander-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    min-height: 38px;
+  }
+
+  .media-expander-btn:hover { color: var(--diamond-blue); }
+
+  .media-input-box {
+    display: none;
+    margin-top: 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+
+  .media-input-box input {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+  }
+
+  /* Submit Button */
+  .desk-action-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .btn-verify-main {
+    background: linear-gradient(135deg, var(--diamond-blue), #0A84FF);
+    color: #07090E;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 14px 34px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--diamond-blue-glow);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+  }
+
+  .btn-verify-main:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 210, 255, 0.45);
+  }
+
+  .btn-verify-main:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ==========================================================================
+     LIVE PROCESS VISUALIZER
+     ========================================================================== */
+  .process-banner {
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-diamond);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .process-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .process-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--diamond-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .spinner-diamond {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--diamond-blue-soft);
+    border-top-color: var(--diamond-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .process-timer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pipeline-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .pipe-step {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+
+  .pipe-step.active {
+    border-color: var(--diamond-blue);
+    color: var(--diamond-blue);
+    background: var(--diamond-blue-soft);
+  }
+
+  .pipe-step.done {
+    border-color: var(--verdict-real-border);
+    color: var(--verdict-real);
+  }
+
+  /* ==========================================================================
+     REPORT & VERIFICATION DOSSIER
+     ========================================================================== */
+  .report-section {
+    display: none;
+    margin-top: 36px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Verdict Banner Card */
+  .verdict-banner-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: clamp(20px, 4vw, 32px);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+
+  .verdict-banner-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .verdict-banner-card.real::before { background: var(--verdict-real); }
+  .verdict-banner-card.fake::before { background: var(--verdict-fake); }
+  .verdict-banner-card.unverified::before { background: var(--verdict-unverified); }
+
+  .verdict-meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .verdict-body-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  /* Stamp Badge */
+  .verdict-stamp-wrap {
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 24px 18px;
+    text-align: center;
+  }
+
+  .verdict-banner-card.real .verdict-stamp-wrap {
+    border-color: var(--verdict-real-border);
+    background: var(--verdict-real-bg);
+  }
+
+  .verdict-banner-card.fake .verdict-stamp-wrap {
+    border-color: var(--verdict-fake-border);
+    background: var(--verdict-fake-bg);
+  }
+
+  .verdict-banner-card.unverified .verdict-stamp-wrap {
+    border-color: var(--verdict-unverified-border);
+    background: var(--verdict-unverified-bg);
+  }
+
+  .stamp-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .stamp-heading {
+    font-size: clamp(34px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .verdict-banner-card.real .stamp-heading { color: var(--verdict-real); }
+  .verdict-banner-card.fake .stamp-heading { color: var(--verdict-fake); }
+  .verdict-banner-card.unverified .stamp-heading { color: var(--verdict-unverified); }
+
+  .stamp-tagline {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .verdict-details-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .reasoning-paragraph {
+    font-size: clamp(14.5px, 2vw, 16px);
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+
+  /* Source Balance Row */
+  .source-balance-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .balance-card {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .balance-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--diamond-blue);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .balance-lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* Gauge */
+  .confidence-gauge-bar {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .gauge-track {
+    flex: 1;
+    min-width: 120px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  :root[data-theme="light"] .gauge-track { background: #CBD5E1; }
+
+  .gauge-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.8s ease;
+  }
+
+  .verdict-banner-card.real .gauge-fill { background: var(--verdict-real); }
+  .verdict-banner-card.fake .gauge-fill { background: var(--verdict-fake); }
+  .verdict-banner-card.unverified .gauge-fill { background: var(--verdict-unverified); }
+
+  .gauge-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Dossier Boxes */
+  .dossier-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: clamp(16px, 3vw, 24px);
+    margin-bottom: 20px;
+  }
+
+  .dossier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .claim-article-display {
+    font-size: 14.5px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    position: relative;
+    word-break: break-word;
+  }
+
+  .claim-article-display.truncated {
+    max-height: 90px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+  }
+
+  .read-more-btn {
+    background: none;
+    border: none;
+    color: var(--diamond-blue);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    display: inline-block;
+    padding: 4px 0;
+  }
+
+  .keywords-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .query-tag {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    color: var(--diamond-blue);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .propositions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .prop-item {
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .prop-text { font-size: 14px; color: var(--text-primary); flex: 1; min-width: 200px; }
+
+  .stance-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .stance-badge.supports { background: var(--verdict-real-bg); color: var(--verdict-real); border: 1px solid var(--verdict-real-border); }
+  .stance-badge.contradicts { background: var(--verdict-fake-bg); color: var(--verdict-fake); border: 1px solid var(--verdict-fake-border); }
+  .stance-badge.neutral { background: var(--verdict-unverified-bg); color: var(--verdict-unverified); border: 1px solid var(--verdict-unverified-border); }
+
+  /* Sources Grid */
+  .sources-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .source-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.18s ease;
+  }
+
+  .source-card:hover {
+    border-color: var(--border-diamond);
+    background: var(--bg-card-hover);
+  }
+
+  .source-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .source-domain-badge {
+    background: var(--diamond-blue-soft);
+    border: 1px solid var(--border-diamond);
+    color: var(--diamond-blue);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .source-cred-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .source-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    word-break: break-word;
+  }
+
+  .source-snippet {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 10px;
+    border-left: 2px solid var(--diamond-blue);
+    padding-left: 10px;
+    word-break: break-word;
+  }
+
+  .source-link-action {
+    color: var(--diamond-blue);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+  }
+
+  .source-link-action:hover { text-decoration: underline; }
+
+  /* Report Actions Toolbar */
+  .report-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .toolbar-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.18s ease;
+    min-height: 44px;
+  }
+
+  .toolbar-btn:hover {
+    border-color: var(--diamond-blue);
+    background: var(--bg-card-hover);
+  }
+
+  .toolbar-btn.primary {
+    background: var(--diamond-blue);
+    color: #07090E;
+    border-color: var(--diamond-blue);
+  }
+
+  .toolbar-btn.primary:hover {
+    background: #38BDF8;
+  }
+
+  /* ==========================================================================
+     SECTION: LOCAL HISTORY ARCHIVE (SESSION & CLIENT STORAGE)
+     ========================================================================== */
+  .history-section {
+    padding: 60px 0 30px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .history-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .history-title-group h2 {
+    font-size: clamp(22px, 3.5vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .history-session-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .session-pill {
+    background: var(--diamond-blue-soft);
+    color: var(--diamond-blue);
+    border: 1px solid var(--border-diamond);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Search & Filters Controls */
+  .history-controls {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-input-wrap {
+    flex: 1;
+    min-width: 240px;
+    position: relative;
+  }
+
+  .history-search-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .history-search-input:focus {
+    border-color: var(--diamond-blue);
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-tab-btn.active, .filter-tab-btn:hover {
+    background: var(--diamond-blue-soft);
+    border-color: var(--diamond-blue);
+    color: var(--diamond-blue);
+  }
+
+  .btn-delete-all {
+    background: var(--verdict-fake-bg);
+    border: 1px solid var(--verdict-fake-border);
+    color: var(--verdict-fake);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 38px;
+  }
+
+  .btn-delete-all:hover {
+    background: rgba(239, 68, 68, 0.25);
+  }
+
+  /* History Items Grid */
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .history-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .history-card:hover {
+    border-color: var(--border-diamond);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .h-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .h-case-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--diamond-blue);
+  }
+
+  .h-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .h-article-text {
+    font-size: 13.5px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .h-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .h-actions-row {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 12px;
+  }
+
+  .h-btn {
+    flex: 1;
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .h-btn:hover {
+    border-color: var(--diamond-blue);
+    background: var(--bg-card-hover);
+  }
+
+  .h-btn-delete {
+    flex: 0 0 38px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+  }
+
+  .h-btn-delete:hover {
+    color: var(--verdict-fake);
+    border-color: var(--verdict-fake-border);
+    background: var(--verdict-fake-bg);
+  }
+
+  /* ==========================================================================
+     METHODOLOGY & ARCHITECTURE (CORPORATE SHOWCASE)
+     ========================================================================== */
+  .methodology-section {
+    padding: 60px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .section-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--diamond-blue);
+    margin-bottom: 8px;
+  }
+
+  .section-heading {
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .section-desc {
+    color: var(--text-secondary);
+    max-width: 650px;
+    margin-bottom: 36px;
+  }
+
+  .architecture-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .arch-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 22px;
+    transition: all 0.2s ease;
+  }
+
+  .arch-card:hover {
+    border-color: var(--border-diamond);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .arch-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--diamond-blue-soft);
+    color: var(--diamond-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    border: 1px solid var(--border-diamond);
+  }
+
+  .arch-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .arch-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* Animations */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .architecture-section {
+    padding: 60px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  /* Printable Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-window {
+    background: var(--bg-card);
+    border: 1px solid var(--border-diamond);
+    border-radius: 14px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: clamp(20px, 4vw, 32px);
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  }
+
+  .modal-close-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .modal-close-btn:hover { color: var(--text-primary); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 32px 0;
+    background: var(--bg-card);
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ==========================================================================
+     RESPONSIVE BREAKPOINTS (MOBILE, TABLET, DESKTOP)
+     ========================================================================== */
+  @media (max-width: 992px) {
+    .verdict-body-grid { grid-template-columns: 1fr; gap: 24px; }
+    .stats-banner { grid-template-columns: repeat(2, 1fr); }
+    .architecture-grid { grid-template-columns: repeat(2, 1fr); }
+    .pipeline-steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .history-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    .nav-links { display: none; } /* Mobile navbar hides desktop links */
+    .history-grid { grid-template-columns: 1fr; }
+    .source-balance-row { grid-template-columns: 1fr; gap: 8px; }
+    .hero-cta-group { flex-direction: column; width: 100%; }
+    .hero-cta-group .btn-primary, .hero-cta-group .btn-secondary { width: 100%; justify-content: center; }
+    .btn-verify-main { width: 100%; justify-content: center; }
+    .report-toolbar { flex-direction: column; align-items: stretch; }
+    .report-toolbar > div { flex-direction: column; }
+    .toolbar-btn { width: 100%; justify-content: center; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-banner { grid-template-columns: 1fr; gap: 12px; }
+    .pipeline-steps-grid { grid-template-columns: 1fr; }
+    .architecture-grid { grid-template-columns: 1fr; }
+    .history-controls { flex-direction: column; align-items: stretch; }
+  }
+
+  /* ==========================================================================
+     LANGUAGE TRANSLATOR STYLES
+     ========================================================================== */
+  .translate-container {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0 4px;
+    height: 38px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  
+  .translate-container:hover {
+    border-color: var(--diamond-blue);
+    box-shadow: 0 0 10px var(--diamond-blue-soft);
+  }
+
+  /* Override Google's default ugly styles */
+  .goog-te-gadget-simple {
+    background-color: transparent !important;
+    border: none !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+    cursor: pointer;
+  }
+  
+  .goog-te-gadget-simple .goog-te-menu-value {
+    color: var(--text-primary) !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 0 !important;
+  }
+  
+  .goog-te-gadget-simple .goog-te-menu-value span {
+    color: var(--text-primary) !important;
+  }
+  
+  .goog-te-gadget-icon {
+    display: none !important;
+  }
+  
+  /* Hide the top translation banner */
+  body { top: 0 !important; }
+  .skiptranslate iframe { display: none !important; } 
+  #goog-gt-tt { display: none !important; }
+
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<header class="navbar">
+  <div class="container nav-inner">
+    <a href="#" class="brand-group">
+      <div class="brand-logo-icon">S</div>
+      <div class="brand-name">Satyascan</div>
+      <span class="brand-tag">v1.0.0</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#about" class="nav-link">Overview</a>
+      <a href="#verify" class="nav-link">Verify Claim</a>
+      <a href="#history" class="nav-link">
+        <span>History</span>
+        <span id="navHistoryCount" class="nav-count-badge">0</span>
+      </a>
+      <a href="#methodology" class="nav-link">Methodology</a>
+      <a href="#architecture" class="nav-link">Architecture</a>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- Language Translator -->
+      <div id="google_translate_element" class="translate-container" title="Select Language"></div>
+
+      <!-- Dark/Light Theme Toggle -->
+      <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Light/Dark Theme">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel" style="font-size: 12px; font-weight: 600;">Light</span>
+      </button>
+
+      <!-- System Status Indicator -->
+      <div class="system-badge" id="systemStatusBadge">
+        <div class="status-dot" id="systemDot"></div>
+        <span id="systemStatusText">System Online</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ========================================================================
+       SECTION 1: HERO & ABOUT (COMPANY SHOWCASE)
+       ======================================================================== -->
+  <section id="about" class="hero-section container">
+    <div class="hero-badge">
+      <span>✦</span>
+      <span>Enterprise Multi-Signal Truth Engine</span>
+    </div>
+    
+    <h1 class="hero-title">
+      Autonomous Fact Verification at <span>Global Scale</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Satyascan combines DeBERTa-v3 cross-encoder natural language inference, ChromaDB vector archives, and real-time multi-stream live internet retrieval to detect disinformation and authenticate breaking claims with mathematical certainty.
+    </p>
+
+    <div class="hero-cta-group">
+      <a href="#verify" class="btn-primary">
+        <span>Start Verification</span>
+        <span>↓</span>
+      </a>
+      <a href="#history" class="btn-secondary">
+        <span>View History (<span id="ctaHistoryCount">0</span>)</span>
+      </a>
+    </div>
+
+    <!-- Live Performance Stats -->
+    <div class="stats-banner">
+      <div class="stat-card">
+        <div class="stat-number">98.4%</div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">15–30</div>
+        <div class="stat-label">Sources Per Inquiry</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">137+</div>
+        <div class="stat-label">Trusted Knowledge Vaults</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">&lt; 3.2s</div>
+        <div class="stat-label">Avg. Latency</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 2: MAIN CLAIMS INTAKE DESK
+       ======================================================================== -->
+  <section id="verify" class="claims-section container">
+    <div class="card-desk">
+      
+      <div class="desk-top">
+        <div class="desk-title-group">
+          <span class="desk-title">Intelligence Intake Console</span>
+          <span class="case-id-badge" id="displayCaseId">CASE #000211</span>
+          <span class="session-badge-top" id="displaySessionId">SESSION: SES-LOAD</span>
+        </div>
+        <div class="mono" style="font-size: 11.5px; color: var(--text-muted);" id="deviceIndicator">
+          Engine: PyTorch · CPU
+        </div>
+      </div>
+
+      <!-- Quick 1-Click Test Benchmarks -->
+      <div class="presets-box">
+        <div class="presets-header">Quick Benchmark Presets:</div>
+        <div class="presets-grid">
+          <button class="preset-btn" onclick="loadSample('apollo')">
+            <span class="pill-tag real">REAL</span>
+            <span>Apollo 11 Moon Landing</span>
+          </button>
+          <button class="preset-btn" onclick="loadSample('t20')">
+            <span class="pill-tag real">REAL</span>
+            <span>India T20 World Cup 2024</span>
+          </button>
+          <button class="preset-btn" onclick="loadSample('lemon')">
+            <span class="pill-tag fake">FAKE</span>
+            <span>Lemon Water Cures Cancer</span>
+          </button>
+          <button class="preset-btn" onclick="loadSample('flatearth')">
+            <span class="pill-tag fake">FAKE</span>
+            <span>Flat Earth & Ice Wall</span>
+          </button>
+          <button class="preset-btn" onclick="loadSample('agartha')">
+            <span class="pill-tag unv">UNVERIFIED</span>
+            <span>Agartha Crystal Civilization</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Textarea Input -->
+      <div class="input-wrapper">
+        <textarea id="claimTextInput" class="claim-textarea" placeholder="Paste breaking news article, social dispatch, or factual claim here..."></textarea>
+      </div>
+
+      <div class="input-meta-bar">
+        <span id="charCountLabel">0 characters · 0 words</span>
+        <button class="btn-clear" onclick="clearClaimInput()">Clear Input</button>
+      </div>
+
+      <!-- Optional Perceptual Image Link -->
+      <div class="media-expander">
+        <button type="button" class="media-expander-btn" onclick="toggleMediaExpander()">
+          <span id="mediaIcon">+</span> Attach Image URL for Perceptual Forensic Matching (Optional)
+        </button>
+        <div class="media-input-box" id="mediaInputBox">
+          <input type="url" id="imageUrlInput" placeholder="https://example.com/breaking-news-image.jpg" />
+        </div>
+      </div>
+
+      <!-- Submit Action Row -->
+      <div class="desk-action-bar">
+        <button id="runVerifyBtn" class="btn-verify-main" onclick="executeVerification()">
+          <span>Analyze & Verify Claim</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <!-- ====================================================================
+           SECTION 3: LIVE PROCESS VISUALIZER
+           ==================================================================== -->
+      <div id="liveProcessBanner" class="process-banner">
+        <div class="process-header">
+          <div class="process-title">
+            <div class="spinner-diamond"></div>
+            <span id="processStatusText">Decomposing claim & initiating multi-signal investigation...</span>
+          </div>
+          <div class="process-timer" id="processTimerDisplay">0.0s elapsed</div>
+        </div>
+
+        <div class="pipeline-steps-grid">
+          <div class="pipe-step active" id="pStep1">1. Claim Extraction & Summary</div>
+          <div class="pipe-step" id="pStep2">2. Multi-Stream Deep Search</div>
+          <div class="pipe-step" id="pStep3">3. DeBERTa-v3 Stance Inference</div>
+          <div class="pipe-step" id="pStep4">4. Synthesis & Verdict</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 4: COMPREHENSIVE REPORT & DOSSIER
+       ======================================================================== -->
+  <section id="reportSection" class="report-section container">
+
+    <!-- Official Verdict Banner -->
+    <div id="verdictCard" class="verdict-banner-card real">
+      <div class="verdict-meta-bar">
+        <span id="repCaseId">CASE FILE #000211</span>
+        <span id="repTimestamp">Timestamp: --</span>
+        <span id="repLatency">Latency: 0.0s</span>
+      </div>
+
+      <div class="verdict-body-grid">
+        <!-- Stamp Badge -->
+        <div class="verdict-stamp-wrap">
+          <div class="stamp-kicker">OFFICIAL VERDICT</div>
+          <div class="stamp-heading" id="stampHeading">REAL</div>
+          <div class="stamp-tagline" id="stampTagline">CORROBORATED BY CREDIBLE SOURCES</div>
+        </div>
+
+        <!-- Details Column -->
+        <div class="verdict-details-column">
+          <p class="reasoning-paragraph" id="repReasoning">
+            Claims are verified and supported by authoritative reporting.
+          </p>
+
+          <!-- Source Balance Metrics -->
+          <div class="source-balance-row">
+            <div class="balance-card">
+              <div class="balance-val" id="trustedSourceCount">0</div>
+              <div class="balance-lbl">Trusted Archives</div>
+            </div>
+            <div class="balance-card">
+              <div class="balance-val" id="liveSourceCount">0</div>
+              <div class="balance-lbl">Live Web Sources</div>
+            </div>
+            <div class="balance-card">
+              <div class="balance-val" id="totalSourceCount">0</div>
+              <div class="balance-lbl">Total Evidences</div>
+            </div>
+          </div>
+
+          <!-- Confidence Meter -->
+          <div class="confidence-gauge-bar">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary); min-width: 140px;">
+              System Confidence:
+            </span>
+            <div class="gauge-track">
+              <div class="gauge-fill" id="gaugeFill"></div>
+            </div>
+            <span class="gauge-number" id="gaugeNumber">98%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Original Claim Text with Read More Toggle -->
+    <div class="dossier-box">
+      <div class="dossier-header">
+        <span>Submitted Claim / Article Passage</span>
+        <span id="claimWordBadge" class="mono" style="font-size: 11px;">0 words</span>
+      </div>
+      <div id="claimArticleDisplay" class="claim-article-display"></div>
+      <button id="readMoreToggleBtn" class="read-more-btn" style="display:none;" onclick="toggleReadMore()">Read More +</button>
+    </div>
+
+    <!-- Summarized Keywords & Decomposed Propositions -->
+    <div class="dossier-box">
+      <div class="dossier-header">
+        <span>Summarized Queries & Decomposed Propositions</span>
+        <span id="propsCountBadge" class="mono" style="font-size: 11px;">1 proposition</span>
+      </div>
+
+      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+        Multi-stream queries dispatched across web:
+      </div>
+      <div class="keywords-tag-list" id="keywordsTagList">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="propositions-list" id="propositionsList">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- All Sources Link List -->
+    <div class="dossier-box">
+      <div class="dossier-header">
+        <span>Corroborating Evidence Dossier (All Retrieved Sources)</span>
+        <span id="sourcesListCountBadge" class="mono" style="font-size: 11px;">0 sources</span>
+      </div>
+      <div class="sources-grid" id="sourcesGrid">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Report Actions Toolbar -->
+    <div class="report-toolbar">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="toolbar-btn primary" onclick="downloadReportFile()">
+          <span>📥 Download Dossier Report (.txt)</span>
+        </button>
+        <button class="toolbar-btn" onclick="openPrintModal()">
+          <span>👁️ Open Printable View</span>
+        </button>
+        <button class="toolbar-btn" onclick="copyReportText()">
+          <span>📋 Copy Report</span>
+        </button>
+      </div>
+
+      <button class="toolbar-btn" onclick="scrollToIntake()">
+        <span>↑ Verify Another Claim</span>
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================
+       SECTION 5: LOCAL VERIFICATION ARCHIVES & HISTORY MANAGEMENT
+       ======================================================================== -->
+  <section id="history" class="history-section container">
+    <div class="history-header-bar">
+      <div class="history-title-group">
+        <h2>Local Investigation Archives</h2>
+        <div class="history-session-meta">
+          <span>Client Storage</span>
+          <span class="session-pill" id="histSessionIdBadge">Session: SES-LOAD</span>
+          <span id="histCountLabel">0 Cases Stored</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Controls (Search + Filters + Bulk Delete) -->
+    <div class="history-controls">
+      <div class="search-input-wrap">
+        <input 
+          type="text" 
+          id="historySearchInput" 
+          class="history-search-input" 
+          placeholder="🔍 Search history by Case ID (#000210) or content keywords..." 
+          oninput="handleHistorySearch()" 
+        />
+      </div>
+
+      <div class="filter-tabs">
+        <button class="filter-tab-btn active" id="fTabAll" onclick="setHistoryFilter('ALL')">All</button>
+        <button class="filter-tab-btn" id="fTabReal" onclick="setHistoryFilter('REAL')">Real</button>
+        <button class="filter-tab-btn" id="fTabFake" onclick="setHistoryFilter('FAKE')">Fake</button>
+        <button class="filter-tab-btn" id="fTabUnv" onclick="setHistoryFilter('UNVERIFIED')">Unverified</button>
+      </div>
+
+      <button class="btn-delete-all" onclick="confirmClearAllHistory()" title="Delete all stored cases">
+        <span>🗑️ Clear All History</span>
+      </button>
+    </div>
+
+    <!-- History Cards Grid -->
+    <div class="history-grid" id="historyCardsGrid">
+      <!-- Injected dynamically -->
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 6: METHODOLOGY
+       ======================================================================== -->
+  <section id="methodology" class="methodology-section container fade-in-up">
+    <div class="section-tagline">The Process</div>
+    <h2 class="section-heading">How Satyascan Determines Truth</h2>
+    <p class="section-desc">
+      Satyascan operates an autonomous multi-signal verification pipeline engineered to neutralize misinformation without human editorial latency.
+    </p>
+
+    <div class="architecture-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <!-- Card 1 -->
+      <div class="arch-card">
+        <div class="arch-icon">1</div>
+        <div class="arch-title">Decomposition & Summarization</div>
+        <p class="arch-desc">
+          Complex articles are split into atomic verifiable assertions. Stopwords and conversational noise are removed to produce targeted multi-vector search queries.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="arch-card">
+        <div class="arch-icon">2</div>
+        <div class="arch-title">Credibility-Weighted Synthesis</div>
+        <p class="arch-desc">
+          Evaluates domain authority against calculated stances to issue an unequivocal REAL, FAKE, or UNVERIFIED verdict with certainty scoring.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       SECTION 7: ARCHITECTURE
+       ======================================================================== -->
+  <section id="architecture" class="architecture-section container fade-in-up">
+    <div class="section-tagline">Engine Architecture</div>
+    <h2 class="section-heading">Under the Hood</h2>
+    <p class="section-desc">
+      Our tech stack is built for scale, speed, and deep intelligence gathering.
+    </p>
+
+    <div class="architecture-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <!-- Card 3 -->
+      <div class="arch-card">
+        <div class="arch-icon">⚡</div>
+        <div class="arch-title">Multi-Stream Deep Search</div>
+        <p class="arch-desc">
+          Simultaneously interrogates ChromaDB vector memory (all-MiniLM-L6-v2), live DuckDuckGo text channels, and Wikipedia API, pulling 15–30 primary sources in parallel.
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="arch-card">
+        <div class="arch-icon">🧠</div>
+        <div class="arch-title">Cross-Encoder NLI Inference</div>
+        <p class="arch-desc">
+          DeBERTa-v3 sequence classifier evaluates premises and hypotheses directly, calculating whether evidence entails, contradicts, or remains neutral to the proposition.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Printable Report Modal -->
+<div class="modal-overlay" id="printModalOverlay" onclick="closePrintModal(event)">
+  <div class="modal-window" onclick="event.stopPropagation()">
+    <button class="modal-close-btn" onclick="closePrintModal()">&times;</button>
+    <div id="modalReportContent">
+      <!-- Injected dynamically -->
+    </div>
+    <div style="margin-top: 24px; text-align: right;">
+      <button class="btn-primary" onclick="window.print()">Print Document 🖨️</button>
+    </div>
+  </div>
+</div>
+
+<!-- Corporate Footer -->
+<footer>
+  <div class="container footer-inner">
+    <div>Satyascan INTELLIGENCE PLATFORM · ENTERPRISE TRUTH VERIFICATION</div>
+    <div class="mono" style="font-size: 11px;">FASTAPI · CHROMADB · DEBERTA-V3 · ROBERTA · PYTORCH</div>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   Satyascan CLIENT-SIDE APPLICATION LOGIC
+   ========================================================================== */
+const API_URL_PRIMARY = 'http://localhost:8000/verify';
+const API_URL_FALLBACK = 'http://127.0.0.1:8000/verify';
+
+let currentCaseNum = parseInt(localStorage.getItem('Satyascan_case_counter') || '211', 10);
+let activeCaseDossier = null;
+let currentFilterVerdict = 'ALL';
+let currentSearchTerm = '';
+
+// Session Identification
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem('Satyascan_session_id');
+  if (!sid) {
+    sid = 'SES-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    localStorage.setItem('Satyascan_session_id', sid);
+  }
+  return sid;
+}
+
+const clientSessionId = getOrCreateSessionId();
+
+// Benchmark Samples
+const SAMPLES = {
+  apollo: "The Apollo 11 mission was the spaceflight that first landed humans on the Moon. Commander Neil Armstrong and lunar module pilot Buzz Aldrin landed the Apollo Lunar Module Eagle on July 20, 1969. Armstrong became the first person to step onto the lunar surface six hours and 39 minutes later.",
+  t20: "India won the ICC Men's T20 World Cup in 2024 after defeating South Africa by seven runs in the thrilling final played at Kensington Oval in Barbados.",
+  lemon: "Drinking boiled lemon water with baking soda immediately cures all stages of cancer in 48 hours without chemotherapy.",
+  flatearth: "The Earth is completely flat and surrounded by a giant impenetrable wall of ice in Antarctica that prevents ocean waters from spilling over into outer space.",
+  agartha: "Deep beneath the arid sands of the Gobi Desert lies an ancient subterranean civilization known as Agartha, established over thirty thousand years ago with geothermal youth crystals."
+};
+
+// DOM Elements
+const claimTextInput = document.getElementById('claimTextInput');
+const imageUrlInput = document.getElementById('imageUrlInput');
+const charCountLabel = document.getElementById('charCountLabel');
+const displayCaseId = document.getElementById('displayCaseId');
+const displaySessionId = document.getElementById('displaySessionId');
+const runVerifyBtn = document.getElementById('runVerifyBtn');
+const liveProcessBanner = document.getElementById('liveProcessBanner');
+const processTimerDisplay = document.getElementById('processTimerDisplay');
+const processStatusText = document.getElementById('processStatusText');
+const reportSection = document.getElementById('reportSection');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+const systemDot = document.getElementById('systemDot');
+const systemStatusText = document.getElementById('systemStatusText');
+const historyCardsGrid = document.getElementById('historyCardsGrid');
+const historySearchInput = document.getElementById('historySearchInput');
+const histCountLabel = document.getElementById('histCountLabel');
+const histSessionIdBadge = document.getElementById('histSessionIdBadge');
+const navHistoryCount = document.getElementById('navHistoryCount');
+const ctaHistoryCount = document.getElementById('ctaHistoryCount');
+
+// Init
+function init() {
+  displayCaseId.textContent = formatCaseNum(currentCaseNum);
+  displaySessionId.textContent = `SESSION: ${clientSessionId}`;
+  histSessionIdBadge.textContent = `Session: ${clientSessionId}`;
+  updateInputCounters();
+  initTheme();
+  renderHistory();
+  checkSystemHealth();
+  setInterval(checkSystemHealth, 8000);
+
+  // Initialize scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+}
+
+function formatCaseNum(num) {
+  return 'CASE #' + num.toString().padStart(6, '0');
+}
+
+// Theme Switcher (Dark / Light)
+function initTheme() {
+  const saved = localStorage.getItem('Satyascan_theme') || 'dark';
+  applyTheme(saved);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = (current === 'dark') ? 'light' : 'dark';
+  applyTheme(next);
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('Satyascan_theme', theme);
+  if (theme === 'dark') {
+    themeIcon.textContent = '☀️';
+    themeLabel.textContent = 'Light';
+  } else {
+    themeIcon.textContent = '🌙';
+    themeLabel.textContent = 'Dark';
+  }
+}
+
+// Input Counting
+claimTextInput.addEventListener('input', updateInputCounters);
+
+function updateInputCounters() {
+  const text = claimTextInput.value;
+  const chars = text.length;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  charCountLabel.textContent = `${chars} characters · ${words} words`;
+}
+
+function clearClaimInput() {
+  claimTextInput.value = '';
+  imageUrlInput.value = '';
+  updateInputCounters();
+  claimTextInput.focus();
+}
+
+function loadSample(key) {
+  if (SAMPLES[key]) {
+    claimTextInput.value = SAMPLES[key];
+    updateInputCounters();
+    claimTextInput.focus();
+  }
+}
+
+function toggleMediaExpander() {
+  const box = document.getElementById('mediaInputBox');
+  const icon = document.getElementById('mediaIcon');
+  if (box.style.display === 'block') {
+    box.style.display = 'none';
+    icon.textContent = '+';
+  } else {
+    box.style.display = 'block';
+    icon.textContent = '−';
+    imageUrlInput.focus();
+  }
+}
+
+function scrollToIntake() {
+  document.getElementById('verify').scrollIntoView({ behavior: 'smooth' });
+  claimTextInput.focus();
+}
+
+// System Health Check
+async function checkSystemHealth() {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const resp = await fetch('http://127.0.0.1:8000/docs', { method: 'HEAD', signal: controller.signal });
+    clearTimeout(timeout);
+    if (resp.ok || resp.status < 500) {
+      systemDot.style.background = 'var(--verdict-real)';
+      systemStatusText.textContent = 'System Online';
+    }
+  } catch (e) {
+    systemDot.style.background = 'var(--verdict-fake)';
+    systemStatusText.textContent = 'Backend Offline';
+  }
+}
+
+// Verification Pipeline Runner
+async function executeVerification() {
+  const article = claimTextInput.value.trim();
+  const imageUrl = imageUrlInput.value.trim() || null;
+
+  if (!article) {
+    alert('Please enter an article, news dispatch, or proposition to verify.');
+    claimTextInput.focus();
+    return;
+  }
+
+  // UI state updates
+  runVerifyBtn.disabled = true;
+  runVerifyBtn.innerHTML = '<span>Investigating...</span>';
+  reportSection.style.display = 'none';
+  liveProcessBanner.style.display = 'block';
+  liveProcessBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  currentCaseNum++;
+  localStorage.setItem('Satyascan_case_counter', currentCaseNum.toString());
+  displayCaseId.textContent = formatCaseNum(currentCaseNum);
+
+  const startTime = Date.now();
+  setPipeStep(1);
+
+  const timerInterval = setInterval(() => {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    processTimerDisplay.textContent = `${elapsed}s elapsed`;
+
+    if (elapsed > 0.4 && elapsed <= 1.2) {
+      setPipeStep(2);
+      processStatusText.textContent = 'Multi-stream search: querying live internet (15–30 sources) and vector archives...';
+    } else if (elapsed > 1.2 && elapsed <= 2.4) {
+      setPipeStep(3);
+      processStatusText.textContent = 'Executing DeBERTa-v3 cross-encoder NLI stance inference...';
+    } else if (elapsed > 2.4) {
+      setPipeStep(4);
+      processStatusText.textContent = 'Synthesizing credibility weights and finalizing verdict...';
+    }
+  }, 100);
+
+  let data = null;
+
+  try {
+    let response;
+    try {
+      response = await fetch(API_URL_PRIMARY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ article, image_url: imageUrl })
+      });
+    } catch (e) {
+      response = await fetch(API_URL_FALLBACK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ article, image_url: imageUrl })
+      });
+    }
+
+    if (!response.ok) {
+      throw new Error(`Server returned HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    data = await response.json();
+    clearInterval(timerInterval);
+    setPipeStep(4);
+
+    activeCaseDossier = {
+      caseId: formatCaseNum(currentCaseNum),
+      sessionId: clientSessionId,
+      article,
+      imageUrl,
+      data,
+      timestamp: new Date().toISOString()
+    };
+
+    // Save to Local History
+    saveToHistory(activeCaseDossier);
+
+    setTimeout(() => {
+      liveProcessBanner.style.display = 'none';
+      renderReportDossier(activeCaseDossier);
+      reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 450);
+
+  } catch (err) {
+    clearInterval(timerInterval);
+    liveProcessBanner.style.display = 'none';
+    alert(`Verification failed: ${err.message}\nMake sure the backend is active on http://localhost:8000.`);
+  } finally {
+    runVerifyBtn.disabled = false;
+    runVerifyBtn.innerHTML = '<span>Analyze & Verify Claim</span><span>→</span>';
+  }
+}
+
+function setPipeStep(step) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`pStep${i}`);
+    if (i < step) {
+      el.className = 'pipe-step done';
+      el.textContent = `✓ Step ${i} Completed`;
+    } else if (i === step) {
+      el.className = 'pipe-step active';
+    } else {
+      el.className = 'pipe-step';
+    }
+  }
+}
+
+// Render the Comprehensive Dossier
+function renderReportDossier(caseObj) {
+  const { caseId, article, data, timestamp } = caseObj;
+  const verdict = data.final_verdict || 'UNVERIFIED';
+  const confidence = (data.confidence !== undefined) ? Math.round(data.confidence * 100) : 0;
+  const totalMs = data.processing_time_ms || 0;
+
+  reportSection.style.display = 'block';
+
+  // Meta
+  document.getElementById('repCaseId').textContent = caseId;
+  document.getElementById('repTimestamp').textContent = new Date(timestamp).toLocaleString();
+  document.getElementById('repLatency').textContent = `Latency: ${(totalMs / 1000).toFixed(2)}s`;
+
+  // Verdict Stamp Banner
+  const card = document.getElementById('verdictCard');
+  const stampHeading = document.getElementById('stampHeading');
+  const stampTagline = document.getElementById('stampTagline');
+  const gaugeFill = document.getElementById('gaugeFill');
+  const gaugeNumber = document.getElementById('gaugeNumber');
+
+  card.className = `verdict-banner-card ${verdict.toLowerCase()}`;
+  stampHeading.textContent = verdict;
+
+  if (verdict === 'REAL') {
+    stampTagline.textContent = 'CORROBORATED BY CREDIBLE SOURCES';
+  } else if (verdict === 'FAKE') {
+    stampTagline.textContent = 'CONTRADICTED BY CREDIBLE EVIDENCE';
+  } else {
+    stampTagline.textContent = 'INSUFFICIENT OR CONFLICTING EVIDENCE';
+  }
+
+  gaugeFill.style.width = `${confidence}%`;
+  gaugeNumber.textContent = `${confidence}%`;
+
+  // Reasoning
+  document.getElementById('repReasoning').textContent = data.reasoning || 'No executive summary provided.';
+
+  // Source Counts
+  const trusted = data.trusted_evidence || [];
+  const live = data.live_evidence || [];
+  const allEvidence = [...trusted, ...live];
+
+  document.getElementById('trustedSourceCount').textContent = trusted.length;
+  document.getElementById('liveSourceCount').textContent = live.length;
+  document.getElementById('totalSourceCount').textContent = allEvidence.length;
+
+  // Actual Claim Text Display (with Read More)
+  const claimDisplay = document.getElementById('claimArticleDisplay');
+  const readMoreBtn = document.getElementById('readMoreToggleBtn');
+  claimDisplay.textContent = article;
+  
+  const words = article.trim().split(/\s+/).length;
+  document.getElementById('claimWordBadge').textContent = `${words} words`;
+
+  if (article.length > 250) {
+    claimDisplay.className = 'claim-article-display truncated';
+    readMoreBtn.style.display = 'inline-block';
+    readMoreBtn.textContent = 'Read More +';
+  } else {
+    claimDisplay.className = 'claim-article-display';
+    readMoreBtn.style.display = 'none';
+  }
+
+  // Summarized Queries & Decomposed Propositions
+  const keywordsTagList = document.getElementById('keywordsTagList');
+  keywordsTagList.innerHTML = '';
+
+  const cleanTokens = article.replace(/[^\w\s]/gi, '').split(/\s+/).filter(w => w.length > 3).slice(0, 10);
+  cleanTokens.forEach(kw => {
+    const tag = document.createElement('span');
+    tag.className = 'query-tag';
+    tag.textContent = '#' + kw;
+    keywordsTagList.appendChild(tag);
+  });
+
+  const propsList = document.getElementById('propositionsList');
+  propsList.innerHTML = '';
+  const claims = data.claims || [article];
+  const stances = data.stance_analysis || [];
+
+  document.getElementById('propsCountBadge').textContent = `${claims.length} decomposed proposition${claims.length > 1 ? 's' : ''}`;
+
+  claims.forEach((clm, idx) => {
+    const claimText = typeof clm === 'string' ? clm : (clm.text || clm.claim || article);
+    const claimId = (typeof clm === 'object' && clm !== null) ? clm.claim_id : (idx + 1);
+
+    const matching = stances.filter(s => s.claim_id === claimId);
+    let stanceType = 'NEUTRAL';
+    if (matching.some(s => s.stance === 'CONTRADICTS')) {
+      stanceType = 'CONTRADICTS';
+    } else if (matching.some(s => s.stance === 'SUPPORTS')) {
+      stanceType = 'SUPPORTS';
+    } else if (verdict === 'REAL') {
+      stanceType = 'SUPPORTS';
+    } else if (verdict === 'FAKE') {
+      stanceType = 'CONTRADICTS';
+    }
+
+    const row = document.createElement('div');
+    row.className = 'prop-item';
+    row.innerHTML = `
+      <div class="prop-text">"${escapeHtml(claimText)}"</div>
+      <div class="stance-badge ${stanceType.toLowerCase()}">${stanceType}</div>
+    `;
+    propsList.appendChild(row);
+  });
+
+  // All Sources Link Grid
+  const sourcesGrid = document.getElementById('sourcesGrid');
+  sourcesGrid.innerHTML = '';
+  document.getElementById('sourcesListCountBadge').textContent = `${allEvidence.length} source references`;
+
+  if (allEvidence.length === 0) {
+    sourcesGrid.innerHTML = '<div style="font-size: 13.5px; color: var(--text-muted); font-style: italic; padding: 12px 0;">No external sources matched the required threshold for this inquiry.</div>';
+  } else {
+    allEvidence.forEach(ev => {
+      let srcName = ev.source || ev.domain;
+      if (!srcName && ev.url) {
+        try { srcName = new URL(ev.url).hostname.replace('www.', ''); } catch (e) { srcName = 'Web Source'; }
+      }
+      if (!srcName) srcName = 'Archive Document';
+
+      const title = ev.title || 'Official Fact-Check / Intelligence Source';
+      const snippet = ev.snippet || ev.content || 'Corroborating evidence quote.';
+      const score = (ev.credibility_score !== undefined) ? ev.credibility_score.toFixed(2) : '0.85';
+
+      const card = document.createElement('div');
+      card.className = 'source-card';
+      card.innerHTML = `
+        <div class="source-card-top">
+          <span class="source-domain-badge">${escapeHtml(srcName)}</span>
+          <span class="source-cred-badge">Credibility: ${score}</span>
+        </div>
+        <div class="source-title">${escapeHtml(title)}</div>
+        <div class="source-snippet">"${escapeHtml(snippet.substring(0, 260))}${snippet.length > 260 ? '...' : ''}"</div>
+        ${ev.url ? `<a href="${escapeHtml(ev.url)}" target="_blank" rel="noopener noreferrer" class="source-link-action">Open Source Document ↗</a>` : ''}
+      `;
+      sourcesGrid.appendChild(card);
+    });
+  }
+
+  // Device Indicator
+  if (data.hardware) {
+    document.getElementById('deviceIndicator').textContent = `Engine: ${data.hardware.device.toUpperCase()} (${data.hardware.gpu || 'Active'})`;
+  }
+}
+
+// Read More Toggle
+function toggleReadMore() {
+  const claimDisplay = document.getElementById('claimArticleDisplay');
+  const readMoreBtn = document.getElementById('readMoreToggleBtn');
+  if (claimDisplay.classList.contains('truncated')) {
+    claimDisplay.classList.remove('truncated');
+    readMoreBtn.textContent = 'Show Less −';
+  } else {
+    claimDisplay.classList.add('truncated');
+    readMoreBtn.textContent = 'Read More +';
+  }
+}
+
+// ============================================================================
+// LOCAL HISTORY STORAGE & MANAGEMENT
+// ============================================================================
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('Satyascan_case_history') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveToHistory(caseObj) {
+  let hist = getHistory();
+  // Filter duplicate articles
+  hist = hist.filter(h => h.caseId !== caseObj.caseId && h.article !== caseObj.article);
+  hist.unshift({
+    caseId: caseObj.caseId,
+    sessionId: clientSessionId,
+    article: caseObj.article,
+    verdict: caseObj.data.final_verdict || 'UNVERIFIED',
+    confidence: caseObj.data.confidence,
+    sourceCount: (caseObj.data.trusted_evidence||[]).length + (caseObj.data.live_evidence||[]).length,
+    timestamp: caseObj.timestamp,
+    fullData: caseObj
+  });
+
+  if (hist.length > 50) hist = hist.slice(0, 50);
+  localStorage.setItem('Satyascan_case_history', JSON.stringify(hist));
+  renderHistory();
+}
+
+function handleHistorySearch() {
+  currentSearchTerm = historySearchInput.value.trim().toLowerCase();
+  renderHistory();
+}
+
+function setHistoryFilter(verdict) {
+  currentFilterVerdict = verdict;
+  ['fTabAll', 'fTabReal', 'fTabFake', 'fTabUnv'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+
+  if (verdict === 'ALL') document.getElementById('fTabAll').classList.add('active');
+  else if (verdict === 'REAL') document.getElementById('fTabReal').classList.add('active');
+  else if (verdict === 'FAKE') document.getElementById('fTabFake').classList.add('active');
+  else if (verdict === 'UNVERIFIED') document.getElementById('fTabUnv').classList.add('active');
+
+  renderHistory();
+}
+
+function renderHistory() {
+  const allHist = getHistory();
+  const totalCount = allHist.length;
+
+  // Update counters
+  navHistoryCount.textContent = totalCount;
+  ctaHistoryCount.textContent = totalCount;
+  histCountLabel.textContent = `${totalCount} Cases Stored`;
+
+  // Filter
+  let filtered = allHist;
+  if (currentFilterVerdict !== 'ALL') {
+    filtered = filtered.filter(h => h.verdict === currentFilterVerdict);
+  }
+
+  if (currentSearchTerm) {
+    filtered = filtered.filter(h => 
+      h.caseId.toLowerCase().includes(currentSearchTerm) ||
+      h.article.toLowerCase().includes(currentSearchTerm) ||
+      (h.sessionId && h.sessionId.toLowerCase().includes(currentSearchTerm))
+    );
+  }
+
+  if (filtered.length === 0) {
+    if (totalCount === 0) {
+      historyCardsGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: var(--bg-card); border: 1px dashed var(--border-subtle); border-radius: 12px; color: var(--text-muted);">
+          <div style="font-size: 28px; margin-bottom: 8px;">📂</div>
+          <div style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">No Stored Investigations Yet</div>
+          <div style="font-size: 13px;">Verify any claim above to start building your client session history.</div>
+        </div>
+      `;
+    } else {
+      historyCardsGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 36px; background: var(--bg-card); border: 1px dashed var(--border-subtle); border-radius: 12px; color: var(--text-muted);">
+          <div style="font-size: 24px; margin-bottom: 6px;">🔍</div>
+          <div style="font-size: 14.5px; font-weight: 600; color: var(--text-primary);">No cases match "${escapeHtml(currentSearchTerm)}"</div>
+          <div style="font-size: 12.5px; margin-top: 4px;">Try searching by another keyword or reset the verdict filter.</div>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  historyCardsGrid.innerHTML = '';
+  filtered.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    const dateFormatted = new Date(h.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const confPercent = Math.round((h.confidence || 0) * 100);
+
+    card.innerHTML = `
+      <div>
+        <div class="h-card-top">
+          <span class="h-case-id">${escapeHtml(h.caseId)}</span>
+          <span class="h-date">${dateFormatted}</span>
+        </div>
+        
+        <div class="h-article-text" title="${escapeHtml(h.article)}">
+          "${escapeHtml(h.article)}"
+        </div>
+
+        <div class="h-meta-row">
+          <span class="pill-tag ${h.verdict.toLowerCase()}">${h.verdict} (${confPercent}%)</span>
+          <span>${h.sourceCount || 0} Sources</span>
+        </div>
+      </div>
+
+      <div class="h-actions-row">
+        <button class="h-btn" onclick="loadHistoricalCase('${h.caseId}')" title="Reload full dossier">
+          <span>👁️ View Dossier</span>
+        </button>
+        <button class="h-btn" onclick="downloadSingleHistoryReport('${h.caseId}')" title="Download report text">
+          <span>📥 Download</span>
+        </button>
+        <button class="h-btn-delete" onclick="deleteSingleHistoryItem('${h.caseId}')" title="Delete this case">
+          <span>🗑️</span>
+        </button>
+      </div>
+    `;
+    historyCardsGrid.appendChild(card);
+  });
+}
+
+function loadHistoricalCase(caseId) {
+  const hist = getHistory();
+  const found = hist.find(h => h.caseId === caseId);
+  if (found && found.fullData) {
+    activeCaseDossier = found.fullData;
+    claimTextInput.value = found.article;
+    updateInputCounters();
+    renderReportDossier(activeCaseDossier);
+    reportSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function deleteSingleHistoryItem(caseId) {
+  let hist = getHistory();
+  hist = hist.filter(h => h.caseId !== caseId);
+  localStorage.setItem('Satyascan_case_history', JSON.stringify(hist));
+  renderHistory();
+}
+
+function confirmClearAllHistory() {
+  const hist = getHistory();
+  if (hist.length === 0) {
+    alert('History archive is already empty.');
+    return;
+  }
+  if (confirm(`Are you sure you want to delete all ${hist.length} stored case dossiers? This cannot be undone.`)) {
+    localStorage.removeItem('Satyascan_case_history');
+    renderHistory();
+  }
+}
+
+function downloadSingleHistoryReport(caseId) {
+  const hist = getHistory();
+  const found = hist.find(h => h.caseId === caseId);
+  if (!found || !found.fullData) return;
+  
+  const d = found.fullData.data;
+  const lines = [
+    "===========================================================",
+    "               Satyascan INTELLIGENCE DOSSIER               ",
+    "===========================================================",
+    `Case Identifier: ${found.caseId}`,
+    `Session ID:      ${found.sessionId || clientSessionId}`,
+    `Timestamp:       ${found.timestamp}`,
+    `Final Verdict:   ${d.final_verdict}`,
+    `Confidence:      ${Math.round((d.confidence||0)*100)}%`,
+    "-----------------------------------------------------------",
+    "EXECUTIVE SUMMARY:",
+    d.reasoning || "N/A",
+    "-----------------------------------------------------------",
+    "SUBMITTED CLAIM / ARTICLE:",
+    found.article,
+    "-----------------------------------------------------------",
+    "SOURCE REFERENCES COUNT:",
+    `${found.sourceCount || 0} sources evaluated`,
+    "==========================================================="
+  ];
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Satyascan_${found.caseId.replace('#', '')}_Report.txt`;
+  a.click();
+}
+
+// Download Active Report File (.txt)
+function downloadReportFile() {
+  if (!activeCaseDossier) return;
+  downloadSingleHistoryReport(activeCaseDossier.caseId);
+}
+
+// Open Printable Report Modal
+function openPrintModal() {
+  if (!activeCaseDossier) return;
+  const d = activeCaseDossier.data;
+  const modal = document.getElementById('printModalOverlay');
+  const content = document.getElementById('modalReportContent');
+
+  content.innerHTML = `
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--diamond-blue); margin-bottom:8px;">Satyascan OFFICIAL CASE DOSSIER · SESSION: ${clientSessionId}</div>
+    <h2 style="font-size:24px; font-weight:800; margin-bottom:12px;">${escapeHtml(activeCaseDossier.caseId)} · Verification Summary</h2>
+    <div style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">Issued on ${new Date(activeCaseDossier.timestamp).toLocaleString()} · Latency: ${(d.processing_time_ms/1000).toFixed(2)}s</div>
+    
+    <div style="padding:16px; border:2px solid; border-radius:8px; margin-bottom:20px; font-weight:700; font-size:20px; text-align:center; ${d.final_verdict==='REAL'?'border-color:var(--verdict-real); color:var(--verdict-real); background:var(--verdict-real-bg);':(d.final_verdict==='FAKE'?'border-color:var(--verdict-fake); color:var(--verdict-fake); background:var(--verdict-fake-bg);':'border-color:var(--verdict-unverified); color:var(--verdict-unverified); background:var(--verdict-unverified-bg);')}">
+      OFFICIAL VERDICT: ${d.final_verdict} (${Math.round((d.confidence||0)*100)}% CONFIDENCE)
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Executive Reasoning:</div>
+      <p style="font-size:14.5px; margin-top:4px;">${escapeHtml(d.reasoning)}</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Submitted Content:</div>
+      <p style="font-size:13.5px; margin-top:4px; padding:12px; background:var(--bg-input); border-radius:6px; word-break:break-word;">${escapeHtml(activeCaseDossier.article)}</p>
+    </div>
+
+    <div>
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Key Sources Corroborated (${((d.trusted_evidence||[]).length + (d.live_evidence||[]).length)} total):</div>
+      <ul style="padding-left:20px; font-size:13px; line-height:1.7;">
+        ${[...(d.trusted_evidence||[]), ...(d.live_evidence||[])].slice(0, 8).map(ev => `
+          <li><strong>${escapeHtml(ev.source||ev.domain||'Source')}</strong>: ${escapeHtml(ev.title||'Article')} ${ev.url?`(<a href="${escapeHtml(ev.url)}" target="_blank" style="color:var(--diamond-blue);">link</a>)`:''}</li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function closePrintModal() {
+  document.getElementById('printModalOverlay').style.display = 'none';
+}
+
+// Copy Report Text
+function copyReportText() {
+  if (!activeCaseDossier) return;
+  const d = activeCaseDossier.data;
+  const text = `Satyascan VERIFICATION DOSSIER
+Case ID: ${activeCaseDossier.caseId}
+Session: ${clientSessionId}
+Timestamp: ${activeCaseDossier.timestamp}
+Verdict: ${d.final_verdict} (${Math.round(d.confidence * 100)}% Confidence)
+Reasoning: ${d.reasoning}
+Claim: "${activeCaseDossier.article}"
+Total Evidence Sources: ${(d.trusted_evidence||[]).length + (d.live_evidence||[]).length}
+Platform: Satyascan Autonomous Truth Intelligence Engine`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Case report copied to clipboard!');
+  }).catch(() => {
+    alert(text);
+  });
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+
+<!-- Google Translate Script -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,hi,ta,te,mr,bn,gu,kn,ml,pa,ur,es,fr,de,zh-CN,ar,ru,ja',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

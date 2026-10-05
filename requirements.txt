@@ -1,0 +1,9 @@
+fastapi
+torch
+transformers
+chromadb
+duckduckgo_search
+imagehash
+uvicorn
+pillow
+sentence-transformers
