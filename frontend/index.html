@@ -1798,6 +1798,33 @@
   .stat-box:nth-child(3) .stat-value { animation-delay: 0.4s; }
   .stat-box:nth-child(4) .stat-value { animation-delay: 0.5s; }
 
+
+  @keyframes ping {
+    75%, 100% { transform: scale(2); opacity: 0; }
+  }
+  @keyframes radar-scan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 0.15; }
+    100% { transform: translateY(1000%); opacity: 0; }
+  }
+  .scan-line {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--diamond-blue), transparent);
+    animation: radar-scan 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
 </style>
 </head>
 <body>
@@ -1914,7 +1941,7 @@
         <div class="stat-label">Trusted Knowledge Vaults</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">&lt; 3.2s</div>
+        <div class="stat-number">&lt; 0.88s</div>
         <div class="stat-label">Avg. Latency</div>
       </div>
     </div>
