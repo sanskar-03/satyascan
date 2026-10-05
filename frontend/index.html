@@ -1549,9 +1549,9 @@
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
-    padding: 0 4px;
+    padding: 0 8px;
     height: 38px;
-    overflow: hidden;
+    min-width: 140px;
     transition: all 0.2s ease;
   }
   
@@ -1584,6 +1584,10 @@
   
   .goog-te-gadget-simple .goog-te-menu-value span {
     color: var(--text-primary) !important;
+  }
+  /* Ensure the text is visible even if variables fail */
+  .goog-te-gadget-simple span {
+    color: inherit !important;
   }
   
   .goog-te-gadget-icon {
@@ -1621,7 +1625,7 @@
 
     <div class="nav-actions">
       <!-- Language Translator -->
-      <div id="google_translate_element" class="translate-container" title="Select Language"></div>
+      <div id="google_translate_element" class="translate-container" title="Select Language"><span style="font-size: 14px; margin: 0 5px;">🌍</span></div>
 
       <!-- Dark/Light Theme Toggle -->
       <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Light/Dark Theme">
