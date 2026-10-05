@@ -1,3 +1,4 @@
+from services.utils.logger import logger
 import ollama
 import json
 import re
@@ -26,8 +27,8 @@ Text: {article_text}"""
         parsed = json.loads(response["message"]["content"])
         if isinstance(parsed, list) and len(parsed) > 0:
             return parsed
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
         
     # FALLBACK: Heuristic Claim Decomposition
     sentences = re.split(r'(?<=[.!?]) +', article_text)

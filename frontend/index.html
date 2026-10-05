@@ -2766,7 +2766,22 @@ function googleTranslateElementInit() {
   }, 'google_translate_element');
 }
 </script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" onerror="handleTranslateError()"></script>
+<script type="text/javascript">
+  function handleTranslateError() {
+      const container = document.getElementById('google_translate_element');
+      if (container) {
+          container.innerHTML = '<span style="font-size:12px;color:#EF4444;padding:0 8px;">Translation Blocked</span>';
+          container.title = 'Translation widget blocked by browser privacy settings. Please disable ad-blockers for multi-language support.';
+          container.style.border = '1px solid #EF4444';
+      }
+  }
+  // Also check if it fails to initialize after 3 seconds
+  setTimeout(() => {
+      if (!window.google || !window.google.translate) {
+          handleTranslateError();
+      }
+  }, 3000);
+</script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+from services.utils.logger import logger
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
 import warnings

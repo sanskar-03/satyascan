@@ -1,4 +1,7 @@
-from ddgs import DDGS
+from services.utils.logger import logger
+from duckduckgo_search import DDGS
+import random
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from urllib.parse import urlparse
 import time
 import requests
@@ -169,12 +172,20 @@ def _extract_search_queries(text: str) -> list:
         f"{compact_kw} news"
     ]
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(Exception)
+)
 def _search_ddg_single(query_str, max_results=10):
+    time.sleep(random.uniform(0.1, 0.5))
     try:
         with DDGS() as dd:
             return list(dd.text(query_str, max_results=max_results))
-    except Exception:
-        return []
+    except Exception as e:
+        logger.error(f"DDGS error for query '{query_str}': {e}", exc_info=True)
+        raise e  # Let tenacity retry it
+
 
 def _search_wiki_single(query_str, max_results=10):
     try:
@@ -202,8 +213,8 @@ def _process_search_result(r, claim_obj):
         return None
     try:
         domain = urlparse(url).netloc.replace("www.", "")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
         
     snippet = r.get("body", "") or r.get("snippet", "")
     claim_text = claim_obj.get("text", "")
@@ -271,8 +282,8 @@ def search_news_for_claims(claims, max_total_results=30):
                     res_list = sf.result(timeout=7)
                     if res_list:
                         raw_hits.extend(res_list)
-                except Exception:
-                    pass
+                except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
             
             # Cache the deep hit list
             if len(raw_hits) >= 8:
@@ -293,8 +304,8 @@ def search_news_for_claims(claims, max_total_results=30):
                 res = future.result(timeout=1)
                 if res is not None and res.get("snippet"):
                     final_results.append(res)
-            except Exception:
-                pass
+            except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
                     
     return final_results
 

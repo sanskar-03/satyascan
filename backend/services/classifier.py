@@ -1,3 +1,4 @@
+from services.utils.logger import logger
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from core.device import get_device

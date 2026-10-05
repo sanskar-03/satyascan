@@ -1,3 +1,4 @@
+from services.utils.logger import logger
 import time
 from services.classifier import classify
 from services.retriever import search_news, search_news_for_claims
@@ -105,8 +106,8 @@ def fact_check_retriever_node(state):
                         seen_urls.add(u)
                         r["claim_id"] = c.get("claim_id")
                         trusted.append(r)
-            except Exception:
-                pass
+            except Exception as e:
+        logger.error(f"An error occurred: {e}", exc_info=True)
     else:
         query = state["article"][:200]
         try:

@@ -1,3 +1,4 @@
+from services.utils.logger import logger
 import ollama
 import json
 import time
