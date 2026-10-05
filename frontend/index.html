@@ -2341,7 +2341,9 @@
 /* ==========================================================================
    Satyascan CLIENT-SIDE APPLICATION LOGIC
    ========================================================================== */
-const API_URL_PRIMARY = 'http://localhost:8000/verify';
+const API_URL_PRIMARY = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000/verify'
+  : `${window.location.origin}/verify`;
 const API_URL_FALLBACK = 'http://127.0.0.1:8000/verify';
 
 let currentCaseNum = parseInt(localStorage.getItem('Satyascan_case_counter') || '211', 10);

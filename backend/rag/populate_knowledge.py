@@ -252,6 +252,7 @@ DOCUMENTS = [
 ]
 
 def populate():
+def populate():
     print(f"Populating ChromaDB trusted_sources with {len(DOCUMENTS)} reference records...")
     count = 0
     for title, content, url, source in DOCUMENTS:

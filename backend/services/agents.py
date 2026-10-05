@@ -112,11 +112,13 @@ def fact_check_retriever_node(state):
         query = state["article"][:200]
         try:
             live = search_news(query)
-        except Exception:
+        except Exception as e:
+            logger.error(f"Fallback news search failed for query '{query}': {str(e)}", exc_info=True)
             live = []
         try:
             trusted = query_trusted_sources(query)
-        except Exception:
+        except Exception as e:
+            logger.error(f"Fallback trusted source search failed for query '{query}': {str(e)}", exc_info=True)
             trusted = []
 
     return {"live_evidence": live, "trusted_evidence": trusted, "timing_retriever": time.time()-t0}
